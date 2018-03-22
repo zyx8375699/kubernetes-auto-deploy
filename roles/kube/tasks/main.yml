@@ -84,5 +84,36 @@
     src: "/etc/kubernetes/admin.conf"
     dest: "~/.kube/config"
 
+- pause:
+    minutes: 2
+
+- name: create clusterrolebinding
+  shell: kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --user=kubelet-bootstrap
+
+- name: copy boot-strap kubelet config
+  copy:
+    src: "kubelet_cfg/10-kubeadm.conf.2"
+    dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+    mode: +x
+    backup: yes
+  notify: restart kubelet
+
+- pause:
+    minutes: 1
+
+- name: approve csr
+  shell: /etc/ansible/roles/kube/files/Scripts/approve_csr.sh
+
+- name: copy full kubelet config
+  copy:
+    src: "kubelet_cfg/10-kubeadm.conf.3"
+    dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+    mode: +x
+    backup: yes
+  notify: restart kubelet
+
+
+
+
 #- name: bootstrap auth
 #- name:   
