@@ -1,0 +1,4 @@
+- hosts: nodes
+  remote_user: root
+  roles:
+    - node

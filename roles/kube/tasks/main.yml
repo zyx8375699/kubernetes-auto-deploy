@@ -1,19 +1,22 @@
-#- name: Finding RPM files
-#  find:
-#    paths: "/app/kubernetes"
-#    patterns: "*.rpm"
-#  register: rpm_result
+- name: login into private registry
+  docker_login:
+    registry: "{{ docker_private_registry }}"
+    username: "{{ docker_private_registry_user }}"
+    password: "{{ docker_private_registry_password }}"
+    reauthorize: yes
+  ignore_errors: yes
 
-#- name: install kubernetes rpm pkg
-#  yum:
-#    name: "{{ item.path }}"
-#    state: present
-#  with_items: "{{ rpm_result.files }}"
+- name: copy docker images scripts
+  copy:
+    src: "Scripts/pull_images.sh"
+    dest: "{{ images_pull_scripts_dir }}"
+    mode: +x
+
 - name: pull images
-  shell: /etc/ansible/roles/docker/files/Scripts/pull_images.sh
+  shell: "{{ images_pull_scripts_dir }}/pull_images.sh"
 
 - name: install kubernetes rpm pkg
-  shell: yum localinstall -y /app/kubernetes/*.rpm
+  shell: yum localinstall -y {{ rpm_dir }}/*.rpm
 
 - name: create pki directory
   file:
@@ -85,7 +88,7 @@
     dest: "~/.kube/config"
 
 - pause:
-    minutes: 2
+    minutes: 1 
 
 - name: create clusterrolebinding
   shell: kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --user=kubelet-bootstrap
@@ -95,9 +98,13 @@
     src: "kubelet_cfg/10-kubeadm.conf.2"
     dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
     mode: +x
-    backup: yes
-  notify: restart kubelet
 
+- name: restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes
+    
 - pause:
     minutes: 1
 
@@ -109,11 +116,6 @@
     src: "kubelet_cfg/10-kubeadm.conf.3"
     dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
     mode: +x
-    backup: yes
-  notify: restart kubelet
+  notify: 
+  - restart kubelet
 
-
-
-
-#- name: bootstrap auth
-#- name:   

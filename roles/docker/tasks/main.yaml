@@ -9,12 +9,12 @@
 
 - name: create docker directory
   file:
-    path: "/app/var/lib/docker"
+    path: "{{ docker_dir }}"
     state: directory
 
 - name: create docker directory softlink
   file:
-    src: "/app/var/lib/docker"
+    src: "{{ docker dir }}"
     dest: "/var/lib"
     state: link
   ignore_errors: yes

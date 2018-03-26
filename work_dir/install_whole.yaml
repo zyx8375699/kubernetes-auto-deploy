@@ -1,0 +1,10 @@
+- hosts: masters
+  remote_user: root
+  roles:
+    - kube
+    - addon
+
+- hosts: nodes
+  remote_user: root
+  roles: 
+    - node   
