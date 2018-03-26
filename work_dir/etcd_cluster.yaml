@@ -1,0 +1,24 @@
+- hosts: cluster
+  remote_user: root
+  roles:
+    - pre
+
+- hosts: 192.168.56.101
+  remote_user: root
+  roles:
+    - master1
+
+- hosts: 192.168.56.102
+  remote_user: root
+  roles: 
+    - master2
+
+- hosts: 192.168.56.103
+  remote_user: root
+  roles:
+    - master3
+
+- hosts: 192.168.56.101
+  remote_user: root
+  roles:
+    - master1-join

@@ -1,12 +1,3 @@
-- name: copy proxy cert
-  copy: 
-    src: "Scripts/createProxyCa.sh"
-    dest: "/etc/kubernetes/pki"
-    mode: +x
-
-- name: generate Proxy CA
-  command: chdir=../etc/kubernetes/pki ./createProxyCa.sh
-
 - name: create addon directory
   file:
     path: "/etc/kubernetes/addons"

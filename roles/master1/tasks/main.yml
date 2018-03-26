@@ -1,0 +1,67 @@
+- name: create kubectl directory
+  file:
+    path: "~/.kube"
+    state: directory
+
+- name: copy manifests files
+  copy: 
+    src: "{{ item }}"
+    dest: "/etc/kubernetes/manifests"
+    mode: +x
+  with_fileglob:
+    - manifests/*
+
+- name: copy cert scripts
+  copy:
+    src: "Scripts/createCA.sh"
+    dest: "/etc/kubernetes/pki"
+    mode: +x
+
+- name: copy proxy cert scripts
+  copy:
+    src: "Scripts/createProxyCa.sh"
+    dest: "/etc/kubernetes/pki"
+    mode: +x
+ 
+- name: install cfssl
+  get_url:
+    url: https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+    dest: /usr/local/bin/cfssl
+    mode: +x
+
+- name: install cfssljson
+  get_url:
+    url: https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+    dest: /usr/local/bin/cfssljson
+    mode: +x
+
+- name: install cfssl-cert-info
+  get_url:
+    url: https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64
+    dest: /usr/local/bin/cfssl-certinfo
+    mode: +x
+
+- name: generate certs and keys
+  command: chdir=../etc/kubernetes/pki ./createCA.sh
+
+- name: generate proxy certs and keys
+  command: chdir=../etc/kubernetes/pki ./createProxyCa.sh
+
+- name: copy stand-alone kubelet config
+  copy:
+    src: "kubelet_cfg/10-kubeadm.conf.1"
+    dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+    mode: +x
+
+- name: start kubelet
+  systemd:
+    name: kubelet
+    state: started
+    enabled: true
+    daemon_reload: yes
+
+- name: copy kubectl config file
+  copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "~/.kube/config"
+
