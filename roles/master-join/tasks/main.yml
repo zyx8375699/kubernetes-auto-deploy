@@ -18,7 +18,7 @@
     daemon_reload: yes
     
 - pause:
-    minutes: 1
+    seconds: 30
 
 - name: approve csr
   local_action: shell /etc/ansible/roles/kube/files/Scripts/approve_csr.sh
