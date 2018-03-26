@@ -1,6 +1,6 @@
 #! /bin/sh
 
-export KUBE_APISERVER="https://192.168.56.101:6443"
+export KUBE_APISERVER="https://192.168.56.200:443"
 
 cat <<EOF > kube-proxy-csr.json
 {

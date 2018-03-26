@@ -20,6 +20,32 @@
   with_fileglob:
     - /etc/kubernetes/*.conf
 
+- name: create haproxy directory
+  file:
+    path: "{{ haproxy_dir }}"
+    state: directory
+
+- name: create keepalived directory
+  file:
+    path: "{{ keepalived_dir }}"
+    state: directory
+
+- name: copy haproxy cfg file
+  copy:
+    src: "config/haproxy.cfg"
+    dest: "{{ haproxy_dir }}"
+
+- name: copy keepalived cfg file
+  copy:
+    src: "config/keepalived.conf"
+    dest: "{{ keepalived_dir }}"
+
+- name: copy keepalived check scripts
+  copy:
+    src: "config/check_apiserver.sh"
+    dest: "{{ keepalived_dir }}"
+    mode: +x
+
 - name: copy stand-alone kubelet config
   copy:
     src: "kubelet_cfg/10-kubeadm.conf.1"

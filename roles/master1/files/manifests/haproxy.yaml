@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pods: ""
+  creationTimestamp: null
+  labels:
+    component: haproxy
+    tier: control-plane
+  name: haproxy
+  namespace: kube-system
+spec:
+  containers:
+  - image: 10.202.107.19/library/haproxy:1.8-alpine
+    name: haproxy
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN"]
+    volumeMounts:
+    - mountPath: /usr/local/etc/haproxy/haproxy.cfg
+      name: haconfig
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /app/Install/haproxy/haproxy.cfg
+      type: FileOrCreate
+    name: haconfig
+status: {}

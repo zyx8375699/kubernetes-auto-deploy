@@ -9,4 +9,6 @@ images_pull_scripts_dir: /app
 
 rpm_dir: /app/kubernetes
 
+haproxy_dir: /app/Install/haproxy
 
+keepalived_dir: /app/Install/keepalived
