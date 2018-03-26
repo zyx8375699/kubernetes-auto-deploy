@@ -13,11 +13,11 @@ spec:
   containers:
   - command:
     - etcd
-    - --name=etcd2
-    - --advertise-client-urls=http://192.168.56.102:2379
-    - --initial-advertise-peer-urls=http://192.168.56.102:2380
-    - --listen-peer-urls=http://192.168.56.102:2380
-    - --listen-client-urls=http://127.0.0.1:2379,http://192.168.56.102:2379
+    - --name=etcd3
+    - --advertise-client-urls=http://192.168.56.103:2379
+    - --initial-advertise-peer-urls=http://192.168.56.103:2380
+    - --listen-peer-urls=http://192.168.56.103:2380
+    - --listen-client-urls=http://127.0.0.1:2379,http://192.168.56.103:2379
     - --data-dir=/var/lib/etcd
     - --initial-cluster=etcd1=http://192.168.56.101:2380,etcd2=http://192.168.56.102:2380,etcd3=http://192.168.56.103:2380
     - --initial-cluster-token=etcd-cluster
@@ -26,7 +26,7 @@ spec:
     livenessProbe:
       failureThreshold: 8
       httpGet:
-        host: 192.168.56.102
+        host: 192.168.56.103
         path: /health
         port: 2379
         scheme: HTTP
