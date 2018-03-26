@@ -13,11 +13,7 @@
     state: directory
 
 - name: create docker directory softlink
-  file:
-    src: "{{ docker dir }}"
-    dest: "/var/lib"
-    state: link
-  ignore_errors: yes
+  shell: ln -s "{{ docker_dir }}" /var/lib  
 
 - name: add docker repo 
   shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
