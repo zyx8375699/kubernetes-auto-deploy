@@ -13,14 +13,14 @@ spec:
   containers:
   - command:
     - etcd
-    - --advertise-client-urls=http://192.168.56.101:2379
+    - --advertise-client-urls=http://{{ etcd.host }}:2379
     - --data-dir=/var/lib/etcd
-    - --listen-client-urls=http://192.168.56.101:2379,http://127.0.0.1:2379
+    - --listen-client-urls=http://{{ etcd.host }}:2379,http://127.0.0.1:2379
     image: gcr.io/google_containers/etcd-amd64:3.1.11
     livenessProbe:
       failureThreshold: 8
       httpGet:
-        host: 192.168.56.101
+        host: {{ etcd.host }}
         path: /health
         port: 2379
         scheme: HTTP

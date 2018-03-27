@@ -1,0 +1,1 @@
+labelmaster: kubectl get nodes | awk '{print "kubectl label node " $1 " node-role.kubernetes.io/master=true"}' | sh

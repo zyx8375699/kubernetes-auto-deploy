@@ -1,32 +1,31 @@
-- name: copy proxy cert
-  copy: 
-    src: "Scripts/createProxyCa.sh"
-    dest: "/etc/kubernetes/pki"
-    mode: +x
-
-- name: generate Proxy CA
-  command: chdir=../etc/kubernetes/pki ./createProxyCa.sh
-
 - name: create addon directory
   file:
     path: "/etc/kubernetes/addons"
     state: directory
 
 - name: copy multiple deploy files
-  copy:
+  template:
     src: "{{ item }}"
-    dest: "/etc/kubernetes/addons"
+    dest: "/etc/kubernetes/addons/{{ item | basename | regex_replace('.j2','') }}"
   with_fileglob:
-    - manifests/*
+    - ../templates/manifests/*
 
 - name: deploy kube-proxy-rbac
   shell: kubectl apply -f /etc/kubernetes/addons/kube-proxy-rbac.yaml
+  delegate_to: "{{ master1 }}"
+  run_once: true
 
 - name: deploy kube-proxy
   shell: kubectl apply -f /etc/kubernetes/addons/kube-proxy.yaml
+  delegate_to: "{{ master1 }}"
+  run_once: true
 
 - name: deploy flannel
   shell: kubectl apply -f /etc/kubernetes/addons/kube-flannel.yml
+  delegate_to: "{{ master1 }}"
+  run_once: true
 
 - name: deploy kube-dns
   shell: kubectl apply -f /etc/kubernetes/addons/kube-dns.yaml
+  delegate_to: "{{ master1 }}"
+  run_once: true

@@ -34,17 +34,23 @@
     state: directory
 
 - name: copy manifests files
-  copy: 
+  template: 
     src: "{{ item }}"
-    dest: "/etc/kubernetes/manifests"
+    dest: "/etc/kubernetes/manifests/{{ item | basename | regex_replace('.j2','') }}"
     mode: +x
   with_fileglob:
-    - manifests/*
+    - ../templates/manifests/*.j2
 
 - name: copy certScripts
-  copy:
-    src: "Scripts/createCA.sh"
-    dest: "/etc/kubernetes/pki"
+  template:
+    src: "Scripts/createCA.sh.j2"
+    dest: "/etc/kubernetes/pki/createCA.sh"
+    mode: +x
+
+- name: copy proxy cert
+  template: 
+    src: "Scripts/createProxyCa.sh.j2"
+    dest: "/etc/kubernetes/pki/createProxyCa.sh"
     mode: +x
 
 - name: install cfssl
@@ -68,6 +74,9 @@
 - name: generate certs and keys
   command: chdir=../etc/kubernetes/pki ./createCA.sh
 
+- name: generate Proxy CA
+  command: chdir=../etc/kubernetes/pki ./createProxyCa.sh
+
 - name: copy stand-alone kubelet config
   copy:
     src: "kubelet_cfg/10-kubeadm.conf.1"
@@ -88,10 +97,12 @@
     dest: "~/.kube/config"
 
 - pause:
-    minutes: 1 
+    seconds: 30 
 
 - name: create clusterrolebinding
   shell: kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --user=kubelet-bootstrap
+  delegate_to: "{{ master1 }}"
+  run_once: true
 
 - name: copy boot-strap kubelet config
   copy:
@@ -120,4 +131,5 @@
     mode: +x
   notify: 
   - restart kubelet
-
+  - short pause
+  - label master

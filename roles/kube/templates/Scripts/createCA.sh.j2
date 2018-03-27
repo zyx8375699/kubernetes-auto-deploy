@@ -1,6 +1,6 @@
 #! /bin/sh
 
-export KUBE_APISERVER="https://192.168.56.101:6443"
+export KUBE_APISERVER="https://{{ CA.kube_apiserver }}"
 
 cat <<EOF > ca-config.json
 {
@@ -50,11 +50,9 @@ cat <<EOF > apiserver-csr.json
     "CN": "kube-apiserver",
     "hosts": [
       "127.0.0.1",
-      "192.168.56.101",
-      "192.168.56.102",
-      "192.168.56.103",
-      "10.254.0.1",
-      "10.96.0.1",
+      "{{ master1 }}",
+      "{{ CA.cluster }}",
+      "{{ CA.cidr }}",
       "kubernetes",
       "kubernetes.default",
       "kubernetes.default.svc",

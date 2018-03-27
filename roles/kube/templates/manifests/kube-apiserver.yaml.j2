@@ -18,7 +18,7 @@ spec:
     - --v=0
     - --tls-private-key-file=/etc/kubernetes/pki/apiserver-key.pem
     - --secure-port=6443
-    - --advertise-address=192.168.56.101
+    - --advertise-address={{ apiserver.host }}
     - --service-account-key-file=/etc/kubernetes/pki/sa.pub
     - --enable-bootstrap-token-auth=true
     - --token-auth-file=/etc/kubernetes/pki/token.csv
@@ -30,12 +30,12 @@ spec:
     - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota,PodNodeSelector
     - --allow-privileged=true
     - --authorization-mode=Node,RBAC
-    - --etcd-servers=http://192.168.56.101:2379
+    - --etcd-servers=http://{{ etcd.host }}:2379
     image: gcr.io/google_containers/kube-apiserver-amd64:v1.9.3
     livenessProbe:
       failureThreshold: 8
       httpGet:
-        host: 192.168.56.101
+        host: {{ apiserver.host }}
         path: /healthz
         port: 6443
         scheme: HTTPS

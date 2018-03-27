@@ -10,4 +10,17 @@ rpm_dir: /app/kubernetes
 
 master1: 192.168.56.101
 
+etcd:
+  host: 192.168.56.101
+
+apiserver:
+  host: 192.168.56.101
+
+controller_manager:
+  cluster_cidr: 10.254.0.0/16
+
+CA:
+  kube_apiserver: 192.168.56.101:6443
+  cidr: 10.254.0.1
+  cluster: 10.96.0.1
 

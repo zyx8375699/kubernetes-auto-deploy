@@ -1,6 +1,6 @@
 #! /bin/sh
 
-export KUBE_APISERVER="https://192.168.56.101:6443"
+export KUBE_APISERVER="https://{{ CA.kube_apiserver }}"
 
 cat <<EOF > kube-proxy-csr.json
 {
@@ -51,7 +51,3 @@ kubectl config set-context system:kube-proxy@kubernetes \
 # kube-proxy set default context
 kubectl config use-context system:kube-proxy@kubernetes \
     --kubeconfig=../kube-proxy.conf
-
-#clush -a "mkdir -p /etc/kubernetes/pki"
-#clush -a -c kube-proxy.pem kube-proxy-key.pem --dest /etc/kubernetes/pki
-#clush -a -c ../kube-proxy.conf --dest /etc/kubernetes
