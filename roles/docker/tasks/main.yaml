@@ -16,7 +16,7 @@
   shell: ln -s "{{ docker_dir }}" /var/lib  
 
 - name: add docker repo 
-  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  shell: yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
   register: result
 
 - name: install docker-ce

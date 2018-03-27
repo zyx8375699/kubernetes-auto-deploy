@@ -21,7 +21,7 @@
     seconds: 30
 
 - name: approve csr
-  local_action: shell /etc/ansible/roles/kube/files/Scripts/approve_csr.sh
+  local_action: shell kubectl get csr | awk 'NR>=2{print $1}' | xargs kubelet certificate approve
   run_once: true
 
 - name: copy full kubelet config

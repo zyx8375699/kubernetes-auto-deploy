@@ -1,4 +1,4 @@
-- hosts: cluster
+- hosts: masters
   remote_user: root
   roles:
     - pre
@@ -18,17 +18,17 @@
   roles:
     - master3full
 
-- hosts: cluster
+- hosts: masters
   remote_user: root
   roles:
     - master-join
 
-# - host: nodes
-#   remote_user: root
-#   roles:
-#     - node
-#
-# - host: 192.168.56.101
-#   remote_user: root
-#   role:
-#     - addon
+- host: 192.168.56.101
+  remote_user: root
+  role:
+    - addon
+
+- host: nodes
+  remote_user: root
+  roles:
+    - node

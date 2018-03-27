@@ -109,7 +109,7 @@
     minutes: 1
 
 - name: approve csr
-  shell: /etc/ansible/roles/kube/files/Scripts/approve_csr.sh
+  shell: kubectl get csr | awk 'NR>=2{print $1}'|xargs kubelet certificate approve
 
 - name: copy full kubelet config
   copy:

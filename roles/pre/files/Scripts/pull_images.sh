@@ -1,10 +1,8 @@
 #!/bin/bash
  
 ARCH=amd64
-version=v1.9.3
-#username=fanlz
- 
-#https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#config-file
+version=v1.9.3 
+
 images=(kube-apiserver-${ARCH}:${version} \
 	kube-controller-manager-${ARCH}:${version} \
 	kube-scheduler-${ARCH}:${version} \
@@ -19,9 +17,7 @@ images=(kube-apiserver-${ARCH}:${version} \
 for image in ${images[@]}
 do
 	docker pull 10.202.107.19/kubernetes/${image}
-	#docker tag ${username}/${image} k8s.gcr.io/${image}
 	docker tag 10.202.107.19/kubernetes/${image} gcr.io/google_containers/${image}
-	#docker push 10.202.107.19/kubernetes/${image}
 	docker rmi 10.202.107.19/kubernetes/${image}
 done
  
