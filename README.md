@@ -1,6 +1,6 @@
-# 使用ansible+shell 自动化部署k8s集群(centos)
+# 使用ansible+shell 自动化部署k8s集群(cent os)
 
-一键部署k8s集群
+一键部署k8s集群, 单master节点，etcd集群。
 
 ## 准备工作
 

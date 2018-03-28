@@ -1,0 +1,28 @@
+- name: copy manifest file
+  copy: 
+    src: "{{ item }}"
+    dest: "/etc/kubernetes/manifests"
+    mode: +x
+  with_fileglob:
+    - manifests/*
+
+- name: copy certs
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/kubernetes/pki"
+  with_fileglob:
+    - /etc/kubernetes/pki/*
+
+- name: copy config
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/kubernetes"
+  with_fileglob:
+    - /etc/kubernetes/*.conf
+
+- name: copy stand-alone kubelet config
+  copy:
+    src: "kubelet_cfg/10-kubeadm.conf.1"
+    dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+    mode: +x
+  notify: start kubelet
