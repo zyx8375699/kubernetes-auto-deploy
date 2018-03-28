@@ -3,3 +3,12 @@
     name: kubelet
     state: restarted
     daemon_reload: yes
+
+- name: short pause
+  pause:
+    seconds: 20
+
+- name: label master
+  shell: "{{ labelmaster }}"
+  delegate_to: "{{ master1 }}"
+  run_once: true

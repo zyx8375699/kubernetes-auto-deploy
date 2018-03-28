@@ -21,8 +21,9 @@
     seconds: 30
 
 - name: approve csr
-  local_action: shell kubectl get csr | awk 'NR>=2{print $1}' | xargs kubelet certificate approve
+  shell: "kubectl get csr | awk 'NR>=2{print $1}' | xargs kubectl certificate approve"
   run_once: true
+  delegate_to: "{{ master1 }}"
 
 - name: copy full kubelet config
   copy:
@@ -31,4 +32,8 @@
     mode: +x
   notify: 
   - restart kubelet
+  - short pause
+  - label master
+
+
 

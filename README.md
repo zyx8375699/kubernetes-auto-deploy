@@ -7,11 +7,14 @@
 完成k8s裸搭文档中的系统配置工作。
 
 安装ansible
+
 ```
 yum install -y epel-release
 yum install -y ansible
 ```
+
 如果需要自动docker认证private registry还需要安装docker-py
+
 ```
 yum install -y python-pip
 pip install docker-py
@@ -101,7 +104,13 @@ keepalived_dir: /app/Install/keepalived    #keepalived地址
 
 ### roles/nodes/vars/main.yml
 
-同pre
+```
+master1: 192.168.56.101    #执行kubectl的机器名称
+```
+
+### roles/nodes/vars/main.yml
+
+同pre和master-join
 
 ### 脚本，部署yaml文件， haproxy, keepalived配置文件
 

@@ -6,17 +6,17 @@
 - hosts: 192.168.56.101
   remote_user: root
   roles:
-    - master1
+    - master1etcd
 
 - hosts: 192.168.56.102
   remote_user: root
   roles: 
-    - master2
+    - master2etcd
 
 - hosts: 192.168.56.103
   remote_user: root
   roles:
-    - master3
+    - master3etcd
 
 - hosts: 192.168.56.101
   remote_user: root

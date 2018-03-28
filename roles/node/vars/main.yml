@@ -7,3 +7,5 @@ docker_private_registry_password: Zip94303
 images_pull_scripts_dir: /app
 
 rpm_dir: /app/kubernetes
+
+master1: 192.168.56.101
