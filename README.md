@@ -22,8 +22,24 @@ git checkout etcd-cluster
 git checkout high-availability
 ```
 
-## 待开发
+## 自动化用户创建小工具
 
-- 一键系统配置
+配置roles/vars/main.yml
 
-- 自动化用户创建工具
+```
+ns_name: tool     #namespace 名称
+
+file_dest: /app    #文件存放目录
+
+role_name: admin    #role名称
+
+sa_name: yuxuan     #service account名称
+
+binding_name: admin    #rolebinding名称
+```
+
+运行脚本
+
+```
+ansible-playbook user.yaml
+```

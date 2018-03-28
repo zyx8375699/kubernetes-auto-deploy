@@ -1,0 +1,9 @@
+ns_name: tool
+
+file_dest: /app
+
+role_name: admin
+
+sa_name: yuxuan
+
+binding_name: admin
