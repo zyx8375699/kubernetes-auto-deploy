@@ -18,6 +18,7 @@ pip install docker-py
 ```
 
 ## 修改文件
+
 ### hosts
 ```
 [masters]
@@ -32,7 +33,9 @@ node1 ip
 node2 ip
 ...
 ```
+
 ### roles/kube/vars/main.yml
+
 ```
 docker_private_registry: 10.202.107.19    #私有仓库地址
 
@@ -43,6 +46,8 @@ docker_private_registry_password: Zip94303    #私有仓库登陆密码
 images_pull_scripts_dir: /app    #下载镜像脚本路径
 
 rpm_dir: /app/kubernetes    #kubernetes安装包路径
+
+master1: 192.168.56.101    #master ip
 ```
 
 ### roles/node/vars/main.yml
@@ -77,9 +82,3 @@ ansible-playbook install_whole.yaml
 ansible-playbook install_docker.yaml
 ansible-playbook install_whole.yaml
 ```
-
-## pending
-
-- 高可用k8s集群搭建
-
-- 服务自动部署

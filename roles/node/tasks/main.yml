@@ -50,10 +50,12 @@
     daemon_reload: yes
     
 - pause:
-    minutes: 1
+    seconds: 20
 
 - name: approve csr
-  local_action: shell /etc/ansible/roles/kube/files/Scripts/approve_csr.sh
+  shell: "kubectl get csr | awk 'NR>=2{print $1}' | xargs kubectl certificate approve"
+  run_once: true
+  delegate_to: "{{ master1 }}"
 
 - name: copy full kubelet config
   copy:
