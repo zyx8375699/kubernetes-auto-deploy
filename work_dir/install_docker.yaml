@@ -1,4 +1,0 @@
-- hosts: cluster
-  remote_user: root
-  roles:
-    - docker

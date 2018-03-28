@@ -1,9 +1,0 @@
-docker_private_registry: 10.202.107.19
-
-docker_private_registry_user: admin
-
-docker_private_registry_password: Zip94303
-
-images_pull_scripts_dir: /app
-
-rpm_dir: /app/kubernetes
