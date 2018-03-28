@@ -1,4 +1,0 @@
-- hosts: masters
-  remote_user: root
-  roles:
-    - addon
