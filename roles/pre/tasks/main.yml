@@ -15,6 +15,18 @@
 - name: pull images
   shell: "{{ images_pull_scripts_dir }}/pull_images.sh"
 
+- name: create rpm dir
+  file:
+    path: "{{ rpm_dir }}"
+    state: directory
+
+- name: copy rpm files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ rpm_dir }}"
+  with_fileglob:
+    - rpms/*
+
 - name: install kubernetes rpm pkg
   shell: yum localinstall -y {{ rpm_dir }}/*.rpm
 

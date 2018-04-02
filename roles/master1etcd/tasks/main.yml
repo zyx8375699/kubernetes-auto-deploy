@@ -4,17 +4,23 @@
     state: directory
 
 - name: copy manifests files
-  copy: 
+  template: 
     src: "{{ item }}"
-    dest: "/etc/kubernetes/manifests"
+    dest: "/etc/kubernetes/manifests/{{ item | basename | regex_replace('.j2','') }}"
     mode: +x
   with_fileglob:
-    - manifests/*
+    - ../templates/manifests/*.j2
 
 - name: copy certScripts
-  copy:
-    src: "Scripts/createCA.sh"
-    dest: "/etc/kubernetes/pki"
+  template:
+    src: "Scripts/createCA.sh.j2"
+    dest: "/etc/kubernetes/pki/createCA.sh"
+    mode: +x
+
+- name: copy proxy cert
+  template: 
+    src: "Scripts/createProxyCa.sh.j2"
+    dest: "/etc/kubernetes/pki/createProxyCa.sh"
     mode: +x
 
 - name: install cfssl
@@ -37,6 +43,9 @@
 
 - name: generate certs and keys
   command: chdir=../etc/kubernetes/pki ./createCA.sh
+
+- name: generate Proxy CA
+  command: chdir=../etc/kubernetes/pki ./createProxyCa.sh
 
 - name: copy stand-alone kubelet config
   copy:

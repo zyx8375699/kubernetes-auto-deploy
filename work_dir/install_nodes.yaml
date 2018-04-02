@@ -1,4 +1,5 @@
 - hosts: nodes
   remote_user: root
   roles:
+    - sys-cfg
     - node

@@ -1,6 +1,7 @@
 - hosts: cluster
   remote_user: root
   roles:
+    - sys-cfg
     - pre
 
 - hosts: 192.168.56.101
@@ -31,4 +32,5 @@
 - hosts: nodes
   remote_user: root
   roles:
+    - sys-cfg
     - node

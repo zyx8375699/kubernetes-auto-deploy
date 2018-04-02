@@ -4,8 +4,6 @@
 
 ## 准备工作
 
-完成k8s裸搭文档中的系统配置工作。
-
 安装ansible
 ```
 yum install -y epel-release
@@ -18,7 +16,18 @@ pip install docker-py
 ```
 
 ## 修改文件
+
+### /etc/ansible/ansible.cfg
+
+```
+[defaults]
+inventory      = /app/kubernetes-auto-deploy/hosts    #hosts文件地址
+...
+roles_path    = /app/kubernetes-auto-deploy/roles:/etc/ansible/roles:/usr/share/ansible/rolesi    #roles文件夹目录
+```
+
 ### hosts
+
 ```
 [masters]
 master ip
@@ -28,11 +37,12 @@ node2 ip
 ...
 [cluster]
 master ip
-node1 ip
-node2 ip
-...
+etcd2 ip
+etcd3 ip
 ```
+
 ### roles/kube/vars/main.yml
+
 ```
 docker_private_registry: 10.202.107.19    #私有仓库地址
 
@@ -49,15 +59,47 @@ rpm_dir: /app/kubernetes    #kubernetes安装包路径
 
 同上
 
-### 脚本，部署yaml文件
+### group_vars/all.yaml
 
-存放在不同roles的files/Scripts和files/manifests目录下，根据之前教程修改内容
+```
+master1: 192.168.56.101
+master2: 192.168.56.102
+master3: 192.168.56.103
 
-## role
+etcd:
+  etcd1:
+    name: etcd1
+    ip: 192.168.56.101
+
+  etcd2:
+    name: etcd2
+    ip: 192.168.56.102
+
+  etcd3:
+    name: etcd3
+    ip: 192.168.56.103
+
+  cluster:
+    name: etcd-cluster    #etcd集群名称
+
+controller_manager:
+  cluster_cidr: 10.254.0.0/16    #cluster_cidr
+
+```
+
+## role
 
 - docker: 安装docker并完成docker配置
 
-- kube: 部署master节点
+- sys-cfg: 安装kubernetes前必要的系统配置
+
+- pre: 部署master节点前准备工作
+
+- master1etcd: master1部署
+
+- master2etcd: master2部署
+
+- master3etcd: master3部署
 
 - addon： 安装网络组件
 
@@ -68,18 +110,13 @@ rpm_dir: /app/kubernetes    #kubernetes安装包路径
 已经安装docker：
 
 ```
-ansible-playbook install_whole.yaml
+ansible-playbook etcd_cluster.yaml
 ```
 
 未安装docker
 
 ```
 ansible-playbook install_docker.yaml
-ansible-playbook install_whole.yaml
+ansible-playbook etcd_cluster.yaml
 ```
 
-## pending
-
-- 高可用k8s集群搭建
-
-- 服务自动部署

@@ -1,10 +1,10 @@
-- name: copy manifest file
-  copy: 
+- name: copy manifests files
+  template: 
     src: "{{ item }}"
-    dest: "/etc/kubernetes/manifests"
+    dest: "/etc/kubernetes/manifests/{{ item | basename | regex_replace('.j2','') }}"
     mode: +x
   with_fileglob:
-    - manifests/*
+    - ../templates/manifests/*.j2
 
 - name: copy certs
   copy:

@@ -8,4 +8,3 @@ images_pull_scripts_dir: /app
 
 rpm_dir: /app/kubernetes
 
-master1: 192.168.56.101

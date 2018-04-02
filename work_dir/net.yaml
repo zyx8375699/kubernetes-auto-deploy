@@ -1,0 +1,5 @@
+- hosts: 192.168.56.101
+  remote_user: root
+  roles:
+    - addon
+

@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  creationTimestamp: null
+  labels:
+    component: etcd
+    tier: control-plane
+  name: etcd
+  namespace: kube-system
+spec:
+  containers:
+  - command:
+    - etcd
+    - --name={{ etcd.etcd3.name }}
+    - --advertise-client-urls=http://{{ etcd.etcd3.ip }}:2379
+    - --initial-advertise-peer-urls=http://{{ etcd.etcd3.ip }}:2380
+    - --listen-peer-urls=http://{{ etcd.etcd3.ip }}:2380
+    - --listen-client-urls=http://127.0.0.1:2379,http://{{ etcd.etcd3.ip }}:2379
+    - --data-dir=/var/lib/etcd
+    - --initial-cluster={{ etcd.etcd1.name }}=http://{{ etcd.etcd1.ip }}:2380,{{ etcd.etcd2.name }}=http://{{ etcd.etcd2.ip }}:2380,{{ etcd.etcd3.name }}=http://{{ etcd.etcd3.ip }}:2380
+    - --initial-cluster-token={{ etcd.cluster.name }}
+    - --initial-cluster-state=new
+    image: gcr.io/google_containers/etcd-amd64:3.1.11
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: {{ etcd.etcd3.ip }}
+        path: /health
+        port: 2379
+        scheme: HTTP
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    name: etcd
+    resources: {}
+    volumeMounts:
+    - mountPath: /var/lib/etcd
+      name: etcd
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /var/lib/etcd
+      type: DirectoryOrCreate
+    name: etcd
+status: {}
