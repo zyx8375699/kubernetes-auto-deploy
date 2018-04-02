@@ -1,0 +1,30 @@
+global
+    log 127.0.0.1 local0 info
+    maxconn 2000
+    user root
+    group root
+
+defaults
+    log     global
+    mode    http
+    option  tcplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+
+frontend kubeapiserver_{{ vip.port }}
+    bind *:{{ vip.port }}
+    mode tcp
+    default_backend kubeapiservers
+    timeout client          1m
+
+backend kubeapiservers
+    mode tcp
+    balance roundrobin
+    server apiserver1 {{ master1 }}:6443 check
+    server apiserver2 {{ master2 }}:6443 check
+    server apiserver3 {{ master3 }}:6443 check
+    timeout connect        10s
+    timeout server          1m

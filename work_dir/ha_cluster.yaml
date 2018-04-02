@@ -1,6 +1,7 @@
 - hosts: masters
   remote_user: root
   roles:
+    - sys-cfg
     - pre
 
 - hosts: 192.168.56.101
@@ -11,24 +12,15 @@
 - hosts: 192.168.56.102
   remote_user: root
   roles: 
-    - master2full
+    - master2
 
 - hosts: 192.168.56.103
   remote_user: root
   roles:
-    - master3full
+    - master3
 
 - hosts: masters
   remote_user: root
   roles:
     - master-join
 
-- host: 192.168.56.101
-  remote_user: root
-  role:
-    - addon
-
-- host: nodes
-  remote_user: root
-  roles:
-    - node

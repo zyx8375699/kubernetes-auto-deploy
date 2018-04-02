@@ -4,49 +4,49 @@
     state: directory
 
 - name: copy manifests files
-  copy: 
+  template: 
     src: "{{ item }}"
-    dest: "/etc/kubernetes/manifests"
+    dest: "/etc/kubernetes/manifests/{{ item | basename | regex_replace('.j2','') }}"
     mode: +x
   with_fileglob:
-    - manifests/*
+    - ../templates/manifests/*.j2
 
 - name: copy cert scripts
-  copy:
-    src: "Scripts/createCA.sh"
-    dest: "/etc/kubernetes/pki"
+  template:
+    src: "Scripts/createCA.sh.j2"
+    dest: "/etc/kubernetes/pki/createCA.sh"
     mode: +x
 
 - name: copy proxy cert scripts
-  copy:
-    src: "Scripts/createProxyCa.sh"
-    dest: "/etc/kubernetes/pki"
+  template:
+    src: "Scripts/createProxyCa.sh.j2"
+    dest: "/etc/kubernetes/pki/createProxyCa.sh"
     mode: +x
  
 - name: create haproxy directory
   file:
-    path: "{{ haproxy_dir }}"
+    path: "{{ haproxy.dir }}"
     state: directory
 
 - name: create keepalived directory
   file:
-    path: "{{ keepalived_dir }}"
+    path: "{{ keepalived.dir }}"
     state: directory
 
 - name: copy haproxy cfg file
-  copy:
-    src: "config/haproxy.cfg"
-    dest: "{{ haproxy_dir }}"
+  template:
+    src: "config/haproxy.cfg.j2"
+    dest: "{{ haproxy.dir }}/haproxy.cfg"
 
 - name: copy keepalived cfg file
-  copy:
-    src: "config/keepalived.conf"
-    dest: "{{ keepalived_dir }}"
+  template:
+    src: "config/keepalived.conf.j2"
+    dest: "{{ keepalived.dir }}/keepalived.conf"
 
 - name: copy keepalived check scripts
-  copy:
-    src: "config/check_apiserver.sh"
-    dest: "{{ keepalived_dir }}"
+  template:
+    src: "config/check_apiserver.sh.j2"
+    dest: "{{ keepalived.dir }}/check_apiserver.sh"
     mode: +x
 
 - name: install cfssl

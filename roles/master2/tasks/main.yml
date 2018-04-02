@@ -1,0 +1,60 @@
+- name: copy manifests files
+  template: 
+    src: "{{ item }}"
+    dest: "/etc/kubernetes/manifests/{{ item | basename | regex_replace('.j2','') }}"
+    mode: +x
+  with_fileglob:
+    - ../templates/manifests/*.j2
+
+- name: copy certs
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/kubernetes/pki"
+  with_fileglob:
+    - /etc/kubernetes/pki/*
+
+- name: copy config
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/kubernetes"
+  with_fileglob:
+    - /etc/kubernetes/*.conf
+
+- name: create haproxy directory
+  file:
+    path: "{{ haproxy.dir }}"
+    state: directory
+
+- name: create keepalived directory
+  file:
+    path: "{{ keepalived.dir }}"
+    state: directory
+
+- name: copy haproxy cfg file
+  template:
+    src: "config/haproxy.cfg.j2"
+    dest: "{{ haproxy.dir }}/haproxy.cfg"
+
+- name: copy keepalived cfg file
+  template:
+    src: "config/keepalived.conf.j2"
+    dest: "{{ keepalived.dir }}/keepalived.conf"
+
+- name: copy keepalived check scripts
+  template:
+    src: "config/check_apiserver.sh.j2"
+    dest: "{{ keepalived.dir }}/check_apiserver.sh"
+    mode: +x
+
+- name: copy stand-alone kubelet config
+  copy:
+    src: "kubelet_cfg/10-kubeadm.conf.1"
+    dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+    mode: +x
+
+- name: start kubelet
+  systemd:
+    name: kubelet
+    state: started
+    enabled: true
+    daemon_reload: yes

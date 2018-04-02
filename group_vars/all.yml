@@ -1,0 +1,33 @@
+vip: 
+  ip: 192.168.56.200
+  port: 443
+
+master1: 192.168.56.101
+master2: 192.168.56.102
+master3: 192.168.56.103
+
+etcd:
+  etcd1:
+    name: etcd1
+    ip: 192.168.56.101
+   
+  etcd2:
+    name: etcd2
+    ip: 192.168.56.102
+   
+  etcd3:
+    name: etcd3
+    ip: 192.168.56.103
+
+  cluster:
+    name: etcd-cluster
+
+controller_manager:
+  cluster_cidr: 10.254.0.0/16 
+
+haproxy:
+  dir: /app/Install/haproxy
+
+keepalived:
+  dir: /app/Install/keepalived
+  interface: enp0s8

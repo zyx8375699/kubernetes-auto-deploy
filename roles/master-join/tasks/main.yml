@@ -1,5 +1,5 @@
 - pause:
-    minutes: 1
+    seconds: 30
 
 - name: create clusterrolebinding
   local_action: shell kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --user=kubelet-bootstrap

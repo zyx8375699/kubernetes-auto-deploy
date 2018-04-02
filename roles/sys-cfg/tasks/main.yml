@@ -1,0 +1,37 @@
+- name: stop firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: true
+
+- name: disable firewalld
+  systemd:
+    name: firewalld
+    enabled: no
+
+- name: swap off
+  command: swapoff -a
+
+- name: disable swap
+  replace:
+    path: "/etc/fstab"
+    regexp: '(.*swap.*)'
+    replace: '#\1'  
+  
+- name: selinux off
+  shell: setenforce 0
+  ignore_errors: yes
+- name: disable selinux
+  replace:
+    path: "/etc/selinux/config"
+    regexp: "SELINUX=enforcing"
+    replace: "SELINUX=disabled"
+- name: network cfg
+  lineinfile:
+    dest: /etc/sysctl.conf
+    line: "{{ item }}"
+  with_items:
+    - net.ipv4.ip_forward=1
+    - net.ipv4.ip_nonlocal_bind=1
+    - net.bridge.bridge-nf-call-iptables=1
+    - net.bridge.bridge-nf-call-ip6tables=1

@@ -3,12 +3,12 @@
     path: "/etc/kubernetes/addons"
     state: directory
 
-- name: copy multiple deploy files
-  copy:
+- name: copy manifests files
+  template:
     src: "{{ item }}"
-    dest: "/etc/kubernetes/addons"
+    dest: "/etc/kubernetes/addons/{{ item | basename | regex_replace('.j2','') }}"
   with_fileglob:
-    - manifests/*
+    - ../templates/manifests/*.j2
 
 - name: deploy kube-proxy-rbac
   shell: kubectl apply -f /etc/kubernetes/addons/kube-proxy-rbac.yaml
