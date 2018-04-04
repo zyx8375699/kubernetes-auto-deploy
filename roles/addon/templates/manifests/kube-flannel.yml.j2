@@ -73,7 +73,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "10.254.0.0/16",
+      "Network": "{{ controller_manager.cluster_cidr }}",
       "Backend": {
         "Type": "vxlan"
       }

@@ -1,6 +1,6 @@
 #! /bin/sh
 
-export KUBE_APISERVER="https://{{ CA.kube_apiserver }}"
+export KUBE_APISERVER="https://{{ master1 }}:6443"
 
 cat <<EOF > kube-proxy-csr.json
 {

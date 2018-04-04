@@ -1,0 +1,44 @@
+- name: copy docker images scripts
+  template:
+    src: "Scripts/pull_upgrade_images.sh.j2"
+    dest: "{{ images_pull_scripts_dir }}/pull_upgrade_images.sh"
+    mode: +x
+
+- name: pull images
+  shell: "{{ images_pull_scripts_dir }}/pull_upgrade_images.sh"
+
+- name: upgrade kubelet and kubectl
+  yum:
+    name: "{{ item }}-{{ new_version}}"
+    state: "present"
+  with_items:
+    - kubelet
+    - kubectl
+
+- name: update manifest file
+  replace:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { path: /etc/kubernetes/manifests/kube-apiserver.yaml, regexp: '(gcr.io/google_containers/kube-apiserver-amd64:.*)', replace: 'gcr.io/google_containers/kube-apiserver-amd64:v{{ new_version }}'} 
+    - { path: /etc/kubernetes/manifests/kube-controller-manager.yaml, regexp: '(gcr.io/google_containers/kube-controller-manager-amd64:.*)', replace: 'gcr.io/google_containers/kube-controller-manager-amd64:v{{ new_version }}'}
+    - { path: /etc/kubernetes/manifests/kube-scheduler.yaml, regexp: '(gcr.io/google_containers/kube-scheduler-amd64:.*)', replace: 'gcr.io/google_containers/kube-scheduler-amd64:v{{ new_version }}'}
+    
+- name: modify kube-proxy doc
+  replace: 
+    path: "/etc/kubernetes/addons/kube-proxy.yaml"
+    regexp: '(gcr.io/google_containers/kube-proxy-amd64:.*)'
+    replace: 'gcr.io/google_containers/kube-proxy-amd64:v{{ new_version }}'
+
+- name: deploy kube-proxy
+  shell: kubectl apply -f /etc/kubernetes/addons/kube-proxy.yaml
+  delegate_to: "{{ master1 }}"
+  run_once: true
+
+#- name: upgrade dns
+#  replace:
+#    src:
+#    regexp:
+#    replace: 
+#  when: 

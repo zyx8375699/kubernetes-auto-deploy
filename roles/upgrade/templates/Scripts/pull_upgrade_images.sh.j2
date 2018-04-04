@@ -1,0 +1,22 @@
+#!/bin/bash
+ 
+ARCH=amd64
+version=v{{ new_version  }}
+ 
+images=(kube-apiserver-${ARCH}:${version} \
+	kube-controller-manager-${ARCH}:${version} \
+	kube-scheduler-${ARCH}:${version} \
+	kube-proxy-${ARCH}:${version} \
+	etcd-${ARCH}:3.1.11 \
+	pause-${ARCH}:3.0 \
+	k8s-dns-sidecar-${ARCH}:1.14.7 \
+	k8s-dns-kube-dns-${ARCH}:1.14.7 \
+	k8s-dns-dnsmasq-nanny-${ARCH}:1.14.7 \
+	)
+ 
+for image in ${images[@]}
+do
+	docker pull gcr.io/google_containers/${image}
+done
+ 
+unset ARCH version images

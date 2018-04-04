@@ -33,7 +33,7 @@ spec:
         - --v=0
         - --logtostderr=true
         - --kubeconfig=/run/kube-proxy.conf
-        - --cluster-cidr={{ flannel.cidr }}
+        - --cluster-cidr={{ controller_manager.cluster_cidr }}
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: true

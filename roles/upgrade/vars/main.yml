@@ -1,0 +1,7 @@
+new_version: 1.9.6
+
+images_pull_scripts_dir: /app
+
+dns:
+  upgrade: false
+  new_version: 1.14.7
