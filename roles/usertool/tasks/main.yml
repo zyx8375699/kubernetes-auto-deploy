@@ -1,0 +1,25 @@
+- name: copy namespace file
+  template:
+    src: "ns.yaml.j2"
+    dest: "{{ file_dest }}/ns.yaml"
+
+- name: copy role file
+  template:
+    src: "role.yaml.j2"
+    dest: "{{ file_dest }}/role.yaml"
+
+- name: create namespace
+  shell: "kubectl apply -f {{ file_dest }}/ns.yaml"
+
+- name: create role
+  shell: "kubectl apply -f {{ file_dest }}/role.yaml"
+
+- name: copy cfg create scripts
+  template:
+    src: "get_cfg.sh.j2"
+    dest: "{{ file_dest }}/get_cfg.sh"
+    mode: +x
+
+- name: create cfg
+  command: chdir=../{{ file_dest }} ./get_cfg.sh
+  
